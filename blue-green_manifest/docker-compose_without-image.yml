@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  loadbalancer:
+    image: nginx:1.25.3-alpine
+    container_name: loadbalancer  
+    ports:
+      - "80:80"
+    volumes:
+      - ./loadbalancer-nginx-blue.conf:/etc/nginx/sites-available/loadbalancer-nginx-blue.conf
+      - ./loadbalancer-nginx-green.conf:/etc/nginx/sites-available/loadbalancer-nginx-green.conf
+    depends_on:
+      - server1-blue
+      - server1-green
+      - server2-blue
+      - server2-green
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - plain-deployment-net
+
+  server1-blue:
+    image: amazoncorretto:21-alpine3.20
+    container_name: server1-blue
+    volumes:
+      - ./spring-0.0.1-SNAPSHOT.jar:/spring.jar
+    command:
+      - "java"
+      - "-jar"
+      - "/spring.jar"
+      - "--deployment=blue"
+    networks:
+      - plain-deployment-net
+
+  server1-green:
+    image: amazoncorretto:21-alpine3.20
+    container_name: server1-green
+    volumes:
+      - ./spring-0.0.1-SNAPSHOT.jar:/spring.jar
+    command:
+      - "java"
+      - "-jar"
+      - "/spring.jar"
+      - "--deployment=green"
+    networks:
+      - plain-deployment-net
+
+  server2-blue:
+    image: amazoncorretto:21-alpine3.20
+    container_name: server2-blue
+    volumes:
+      - ./spring-0.0.1-SNAPSHOT.jar:/spring.jar
+    command:
+      - "java"
+      - "-jar"
+      - "/spring.jar"
+      - "--deployment=blue"
+    networks:
+      - plain-deployment-net
+
+  server2-green:
+    image: amazoncorretto:21-alpine3.20
+    container_name: server2-green
+    volumes:
+      - ./spring-0.0.1-SNAPSHOT.jar:/spring.jar
+    command:
+      - "java"
+      - "-jar"
+      - "/spring.jar"
+      - "--deployment=green"
+    networks:
+      - plain-deployment-net
+
+networks:
+  plain-deployment-net:

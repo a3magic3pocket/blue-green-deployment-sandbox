@@ -30,4 +30,4 @@ replay_pid*
 .gradle
 build
 .idea
-
+!blue-green_manifest/*.jar
