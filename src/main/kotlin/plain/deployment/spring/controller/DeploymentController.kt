@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/deployment")
+@RequestMapping("/")
 class DeploymentController {
 
     @Value("\${deployment}")
     lateinit var deployment: String
 
-    @GetMapping("/current")
+    @GetMapping
     fun getCurrentDeployment(): String {
         return deployment
     }
